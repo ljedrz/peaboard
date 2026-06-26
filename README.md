@@ -51,6 +51,44 @@ protocol that sits on its *own* `peashape` node (and `peashape`
 sits on its own `pea2pea` node). peaboard runs one of each and
 bridges them.
 
+### Independent Nodes
+
+Unlike many peer-to-peer frameworks, `peaboard` intentionally
+does not multiplex all protocols over a single networking stack.
+Each component owns its own `pea2pea::Node`, along with its own
+`peashape` instance. At first glance this may appear redundant.
+In practice, it creates clean operational boundaries.
+
+Each component independently controls:
+- connection establishment and teardown,
+- maximum number of peers,
+- admission policy,
+- backpressure strategy,
+- traffic shaping profile,
+- reconnect behaviour,
+- resource limits,
+- exposure to different networks or interfaces.
+
+This separation allows discovery and dissemination to be optimized
+independently. For example, a deployment may expose `peaveil` to a
+broader set of peers while keeping `peasub` considerably more
+selective. Likewise, each component may employ different traffic
+shaping strategies or bandwidth budgets without affecting the others.
+
+Keeping the networking stacks separate also isolates failure domains.
+Congestion, policy changes, or implementation bugs in one component
+do not automatically propagate to the others.
+
+Finally, multiplexing remains available as an application-level
+optimization, not as a fundamental architectural assumption.
+Components that benefit from sharing a connection may do so, while
+those that benefit from isolation can continue to operate
+independently.
+
+This design deliberately favors explicit composition over implicit
+coordination. The application owns the policy; the libraries remain
+small, self-contained, and independently reusable.
+
 ### The life of a discovery
 
 How a node that knows only one peer ends up connected to the
@@ -101,7 +139,7 @@ What happens when you type a line and press enter:
               (the app is the only thing that opens a socket)
 ```
 
-## Connections and the peer count
+### Connections and the peer count
 
 A subtlety worth understanding, because the raw connection count
 is *not* what you'd expect.
