@@ -1,5 +1,9 @@
 # peaboard
 
+[![Crates.io](https://img.shields.io/crates/v/peaboard.svg)](https://crates.io/crates/peaboard)
+[![Documentation](https://docs.rs/peaboard/badge.svg)](https://docs.rs/peaboard)
+[![dependency status](https://deps.rs/repo/github/ljedrz/peaboard/status.svg)](https://deps.rs/repo/github/ljedrz/peaboard)
+
 A private bulletin board you run from the terminal — built to
 **demonstrate the Peapod stack** end to end.
 
@@ -31,7 +35,21 @@ Boards:
 [15:45 #df4fb8] carol: yep, see message #b8de5d
 ```
 
-## How the pea\* crates interact
+---
+
+### 📖 Table of Contents
+
+- [How the Peapod crates interact](#how-the-peapod-crates-interact)
+- [Run it](#run-it)
+- [Commands](#commands)
+- [The code](#the-code)
+- [Just a demo](#just-a-demo)
+- [License](#license)
+- [Peapod](#-peapod)
+
+---
+
+## How the Peapod crates interact
 
 The whole point of this example. Four crates stack up, and each
 one does **only** its own job — the layer below never knows what
