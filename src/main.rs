@@ -90,7 +90,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = parse_args();
 
     let state = Arc::new(Mutex::new(State::default()));
-    state.lock().unwrap().boards.extend(SEED_BOARDS.iter().map(|s| s.to_string()));
+    state
+        .lock()
+        .unwrap()
+        .boards
+        .extend(SEED_BOARDS.iter().map(|s| s.to_string()));
 
     // Discovery overlay (peaveil) on `port`. The `bootstrap`
     // addresses are seeded into peaveil's view; peaveil does not
@@ -99,7 +103,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         name: Some(format!("peaboard-disc-{}", args.port)),
         listener_addr: Some(format!("127.0.0.1:{}", args.port).parse()?),
         bootstrap: args.bootstrap.clone(),
-        cover: peaveil::CoverStrategy::Constant { interval: Duration::from_millis(200) },
+        cover: peaveil::CoverStrategy::Constant {
+            interval: Duration::from_millis(200),
+        },
         ..Default::default()
     });
     disc.spawn().await?;
@@ -108,7 +114,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let board = Board::new(BoardConfig {
         name: Some(format!("peaboard-board-{}", args.port)),
         listener_addr: Some(format!("127.0.0.1:{}", args.port + 1).parse()?),
-        cover: peasub::CoverStrategy::Constant { interval: Duration::from_millis(200) },
+        cover: peasub::CoverStrategy::Constant {
+            interval: Duration::from_millis(200),
+        },
         fanout: 4,
         message_size: proto::MESSAGE_SIZE,
         ..Default::default()
@@ -172,7 +180,12 @@ fn post(state: &Mutex<State>, board: &Board, cipher: &ChaCha20Poly1305, nick: &s
         println!("join a board first: /join <board>");
         return;
     };
-    let p = Post { board: board_name, nick: nick.to_string(), ts: now_secs(), text: text.to_string() };
+    let p = Post {
+        board: board_name,
+        nick: nick.to_string(),
+        ts: now_secs(),
+        text: text.to_string(),
+    };
     let Some(sealed) = seal(cipher, &p) else {
         println!("message too long (max {} bytes)", proto::MAX_POST);
         return;
@@ -192,7 +205,12 @@ fn deliver(state: &Mutex<State>, p: Post, id: String) {
     if !s.seen.insert(id.clone()) {
         return; // already filed (our own echo, or a relayed copy)
     }
-    let line = Line { id: id[..6].to_string(), ts: p.ts, nick: p.nick, text: p.text };
+    let line = Line {
+        id: id[..6].to_string(),
+        ts: p.ts,
+        nick: p.nick,
+        text: p.text,
+    };
     s.boards.insert(p.board.clone());
     let showing = s.current.as_deref() == Some(p.board.as_str());
     s.log.entry(p.board).or_default().push(line.clone());
@@ -221,7 +239,11 @@ fn list_boards(state: &Mutex<State>) {
     println!("Boards:");
     for b in &s.boards {
         let count = s.log.get(b).map_or(0, Vec::len);
-        let marker = if s.current.as_deref() == Some(b.as_str()) { " *" } else { "" };
+        let marker = if s.current.as_deref() == Some(b.as_str()) {
+            " *"
+        } else {
+            ""
+        };
         println!("    {b}  ({count}){marker}");
     }
 }
@@ -294,7 +316,10 @@ fn banner(args: &Args, board_addr: SocketAddr) {
     println!("┌─ peaboard ───────────────────────────────────────────────┐");
     println!("│ a private bulletin board on the pea* stack — DEMO ONLY   │");
     println!("└──────────────────────────────────────────────────────────┘");
-    println!("discovery : 127.0.0.1:{}   board : {}", args.port, board_addr);
+    println!(
+        "discovery : 127.0.0.1:{}   board : {}",
+        args.port, board_addr
+    );
     println!("nick      : {}", args.nick);
     println!("privacy   : constant cover traffic — an observer cannot tell");
     println!("            a busy board from an idle one, nor which board you");
@@ -325,7 +350,9 @@ fn print_line(l: &Line) {
 }
 
 fn now_secs() -> u64 {
-    SystemTime::now().duration_since(UNIX_EPOCH).map_or(0, |d| d.as_secs())
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_or(0, |d| d.as_secs())
 }
 
 /// `HH:MM` in UTC, computed without pulling in a date library.
@@ -373,12 +400,18 @@ fn parse_args() -> Args {
             "--help" | "-h" => {
                 println!("usage: peaboard [--port P] [--bootstrap IP:PORT]... [--nick NAME]");
                 println!("  --port P          peaveil listens on P, peasub on P+1 (default 9000)");
-                println!("  --bootstrap A     a peer's peaveil address to enter through (repeatable)");
+                println!(
+                    "  --bootstrap A     a peer's peaveil address to enter through (repeatable)"
+                );
                 println!("  --nick NAME       your display name (default: anon)");
                 std::process::exit(0);
             }
             _ => {}
         }
     }
-    Args { port, bootstrap, nick }
+    Args {
+        port,
+        bootstrap,
+        nick,
+    }
 }

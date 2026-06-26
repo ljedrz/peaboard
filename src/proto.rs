@@ -52,7 +52,11 @@ impl Post {
     /// Serialize to a compact byte buffer, or `None` if a field
     /// is too long to encode / the whole thing exceeds one frame.
     fn encode(&self) -> Option<Vec<u8>> {
-        let (b, n, t) = (self.board.as_bytes(), self.nick.as_bytes(), self.text.as_bytes());
+        let (b, n, t) = (
+            self.board.as_bytes(),
+            self.nick.as_bytes(),
+            self.text.as_bytes(),
+        );
         if b.len() > u8::MAX as usize || n.len() > u8::MAX as usize || t.len() > u16::MAX as usize {
             return None;
         }
@@ -83,7 +87,12 @@ impl Post {
         let ts = u64::from_be_bytes(take(&mut c, 8)?.try_into().ok()?);
         let tl = u16::from_be_bytes(take(&mut c, 2)?.try_into().ok()?) as usize;
         let text = std::str::from_utf8(take(&mut c, tl)?).ok()?.to_string();
-        Some(Post { board, nick, ts, text })
+        Some(Post {
+            board,
+            nick,
+            ts,
+            text,
+        })
     }
 }
 

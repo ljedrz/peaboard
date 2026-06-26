@@ -1,11 +1,11 @@
 # peaboard
 
 A private bulletin board you run from the terminal — built to
-**demonstrate the pea\* stack** end to end.
+**demonstrate the Peapod stack** end to end.
 
 > [!WARNING]
 > **This is a demonstration, not a product.** It exists to show
-> how the pea\* crates fit together in the smallest honest amount
+> how the Peapod crates fit together in the smallest honest amount
 > of code. It ships a **hard-coded encryption key** (so anyone
 > with the source can read every message), keeps no history
 > across restarts, and has had no security review. Do not use it
@@ -14,7 +14,7 @@ A private bulletin board you run from the terminal — built to
 
 ```
 ┌─ peaboard ───────────────────────────────────────────────┐
-│ a private bulletin board on the pea* stack — DEMO ONLY   │
+│ a private bulletin board on the Peapod stack — DEMO ONLY │
 └──────────────────────────────────────────────────────────┘
 discovery : 127.0.0.1:9000   board : 127.0.0.1:9001
 nick      : alice
