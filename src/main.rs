@@ -38,11 +38,11 @@ use chacha20poly1305::ChaCha20Poly1305;
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::sync::broadcast::error::RecvError;
 
-use peasub::{Node as Board, NodeConfig as BoardConfig, ID_SIZE};
+use peasub::{ID_SIZE, Node as Board, NodeConfig as BoardConfig};
 use peaveil::{Node as Discovery, NodeConfig as DiscoveryConfig};
 
 mod proto;
-use proto::{board_key, open, seal, Post};
+use proto::{Post, board_key, open, seal};
 
 /// How many peers to keep connected on each overlay.
 const PEER_CAP: usize = 8;

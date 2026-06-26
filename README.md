@@ -244,7 +244,7 @@ here, if you're building something real.
 
 ## License
 
-MIT OR CC0-1.0.
+CC0-1.0 OR MIT.
 
 ## 🫛 Peapod
 
