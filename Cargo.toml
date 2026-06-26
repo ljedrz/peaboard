@@ -1,0 +1,19 @@
+[package]
+name = "peaboard"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR CC0-1.0"
+description = "A private bulletin board on the pea* stack: discovery (peaveil), gossip (peasub), and metadata-private shaping (peashape) in one small CLI."
+repository = "https://github.com/ljedrz/peaboard"
+keywords = ["p2p", "gossip", "privacy", "discovery", "bulletin-board"]
+categories = ["network-programming", "command-line-utilities"]
+
+[dependencies]
+peaveil = "0.1"
+peasub = "0.2"
+tokio = { version = "1", features = ["full"] }
+chacha20poly1305 = "0.10"
+
+[[bin]]
+name = "peaboard"
+path = "src/main.rs"
